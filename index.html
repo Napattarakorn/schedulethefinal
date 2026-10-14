@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตารางงานรายเดือน</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#b4532a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ตารางงาน">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ee;--card:#fff;--tx:#2b2620;--mu:#7a7167;--bd:#e4ddd2;--ac:#b4532a;--acx:#fff;--in:#faf7f2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1915;--card:#27231e;--tx:#f0ebe3;--mu:#a39a8e;--bd:#3a342c;--ac:#e0825a;--acx:#1c1915;--in:#1f1b17}}
+:root[data-theme="dark"]{--bg:#1c1915;--card:#27231e;--tx:#f0ebe3;--mu:#a39a8e;--bd:#3a342c;--ac:#e0825a;--acx:#1c1915;--in:#1f1b17}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:'Sarabun',system-ui,sans-serif;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0 0 12px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.mon{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px}
+.mon b{min-width:130px;text-align:center}
+button,select,input,textarea{font:inherit;color:var(--tx)}
+button{border:1px solid var(--bd);background:var(--card);border-radius:10px;padding:8px 12px;cursor:pointer}
+button.p{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:600}
+button.g{border:0;background:none;padding:6px 10px}
+input,select,textarea{width:100%;background:var(--in);border:1px solid var(--bd);border-radius:10px;padding:9px 10px}
+.bar input,.bar select{width:auto;flex:1;min-width:130px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.tab{position:relative;background:var(--card);border:2px solid var(--bd);border-radius:16px;padding:18px 8px 14px;text-align:center;cursor:pointer;min-height:96px}
+.tab b{display:block;font-size:19px;margin:4px 0 2px}.tab small{color:var(--mu)}.tab .ic{font-size:26px}
+.tab.on{background:var(--ac);border-color:var(--ac);color:var(--acx)}.tab.on small{color:var(--acx);opacity:.85}
+.tab .rn{position:absolute;top:4px;right:6px;font-size:13px;padding:4px;opacity:.8}
+@media(max-width:700px){.tab b{font-size:15px}.tab{padding:14px 4px 10px}}
+.stats{display:flex;gap:8px;margin-bottom:12px}
+.stat{flex:1;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 12px}
+.stat span{display:block;color:var(--mu);font-size:12px}.stat b{font-size:20px}
+.tw{overflow-x:auto;background:var(--card);border:1px solid var(--bd);border-radius:14px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--bd)}
+th{font-size:12px;color:var(--mu);background:var(--in);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td{overflow-wrap:anywhere;word-break:break-word}
+td.x{min-width:180px;max-width:300px;white-space:pre-wrap}
+.tag{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}
+.empty{padding:36px;text-align:center;color:var(--mu)}
+.act{white-space:nowrap}
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--card);color:var(--tx);width:min(560px,94vw);padding:18px;max-height:90vh}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px}.f .w{grid-column:1/-1}
+label{font-size:12px;color:var(--mu);display:block;margin-bottom:3px}
+.cal{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:8px;margin-bottom:12px}
+.cg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.ch{text-align:center;font-size:12px;color:var(--mu);padding:4px 0}
+.cd{min-height:78px;border:1px solid var(--bd);border-radius:10px;padding:4px;cursor:pointer;background:var(--in);overflow:hidden}
+.cd.o{visibility:hidden;cursor:default}
+.cd .dn{font-size:13px;font-weight:600;display:block;margin-bottom:2px}
+.cd.td .dn{display:inline-block;background:var(--ac);color:var(--acx);border-radius:99px;min-width:22px;text-align:center;padding:0 5px}
+.cd.sl{outline:2px solid var(--ac);outline-offset:-2px}
+.cd .ev{display:block;font-size:11px;line-height:1.3;border-radius:5px;padding:1px 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cd .mo{font-size:11px;color:var(--mu)}
+.st{font-size:12px;color:var(--mu)}
+.fl{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--mu)}
+@media(max-width:700px){
+.cd{min-height:52px;padding:3px 2px;text-align:center}
+.cd .ev{height:6px;width:6px;padding:0;border-radius:50%;display:inline-block;margin:1px;font-size:0;color:transparent}
+.cd .ev{background:currentColor}
+.cal{padding:4px}.cg{gap:2px}
+.mw table,.mw tbody,.mw tr,.mw td{display:block}.mw thead{display:none}
+.mw tr{padding:12px;border-bottom:1px solid var(--bd)}.mw td{border:0;padding:3px 0}
+.mw td[data-l]::before{content:attr(data-l)": ";color:var(--mu);font-size:12px}
+.mw td.n{font-weight:700}.f{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>📅 ตารางงานรายเดือน</h1>
+<div class="bar">
+ <div class="mon"><button class="g" id="pv">‹</button><b id="ml"></b><button class="g" id="nx">›</button></div>
+ <input id="q" placeholder="ค้นหา...">
+ <button class="p" id="add">+ เพิ่มงาน</button>
+ <button id="bk" title="สำรองข้อมูล">💾 สำรอง</button>
+ <button id="rs" title="กู้คืนข้อมูล">📂 กู้คืน</button>
+ <button id="lo" hidden>ออกจากระบบ</button><span class="st" id="st"></span>
+ <input type="file" id="rf" accept=".xlsx,.csv,.json" hidden>
+</div>
+<div class="cal"><div class="cg" id="cal"></div></div>
+<div class="tabs" id="tabs"></div>
+<div class="fl" id="fl" hidden></div>
+<div class="stats"><div class="stat"><span>จำนวนงาน</span><b id="s1">0</b></div><div class="stat"><span>แขกรวม</span><b id="s2">0</b></div></div>
+<div class="tw mw" id="tw"></div>
+</div>
+
+<dialog id="dl">
+<h3 id="dt" style="margin:0 0 12px">เพิ่มงาน</h3>
+<div class="f">
+ <div class="w"><label>ชื่องาน</label><input id="name"></div>
+ <div><label>วันที่</label><input type="date" id="date"></div>
+ <div><label>เวลา</label><input id="time" placeholder="เช่น 18:00-21:00"></div>
+ <div class="w"><label>สถานที่</label><input id="place"></div>
+ <div class="w"><label>รายละเอียดงาน</label><textarea id="detail" rows="2"></textarea></div>
+ <div class="w"><label>รายการอาหาร</label><textarea id="menu" rows="2"></textarea></div>
+ <div><label>จำนวนแขก</label><input type="number" min="0" id="guests"></div>
+ <div><label>หัวหน้าชุด</label><input id="leader"></div>
+ <div class="w"><label>ประเภทของงาน</label><select id="type"></select></div>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
+ <button id="cx">ยกเลิก</button><button class="p" id="sv">บันทึก</button>
+</div>
+</dialog>
+
+<dialog id="rd" style="width:min(380px,94vw)">
+<h3 style="margin:0 0 12px">แก้ไขชื่อหัวข้อ</h3>
+<input id="rv">
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button id="rcx">ยกเลิก</button><button class="p" id="rok">บันทึก</button></div>
+</dialog>
+
+<dialog id="dd" style="width:min(380px,94vw)">
+<h3 style="margin:0 0 8px">ยืนยันการลบ</h3>
+<div id="dm" style="color:var(--mu)"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button id="dcx">ยกเลิก</button><button class="p" id="dok">ลบ</button></div>
+</dialog>
+
+<dialog id="pw" style="width:min(340px,94vw)">
+<h3 style="margin:0 0 10px">ใส่รหัสผ่านเพื่อแก้ไขข้อมูล</h3>
+<input id="pwi" type="password" autocomplete="off" inputmode="text">
+<div id="pwe" style="color:#c0392b;margin-top:8px;min-height:18px"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end"><button id="pwc">ยกเลิก</button><button class="p" id="pwo">ตกลง</button></div>
+</dialog>
+<dialog id="lg" style="width:min(380px,94vw)">
+<h3 style="margin:0 0 12px">เข้าสู่ระบบ</h3>
+<div class="f"><div class="w"><label>อีเมล</label><input id="le" type="email" autocomplete="username"></div>
+<div class="w"><label>รหัสผ่าน</label><input id="lp" type="password" autocomplete="current-password"></div></div>
+<div id="lerr" style="color:#c0392b;margin-top:8px;min-height:18px"></div>
+<div style="display:flex;justify-content:flex-end;margin-top:6px"><button class="p" id="lok">เข้าสู่ระบบ</button></div>
+</dialog>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+// ตั้งค่าออนไลน์: ใส่ค่าจาก Firebase (ถ้าเว้นว่าง แอปจะเก็บข้อมูลในเครื่องเหมือนเดิม)
+const FB={apiKey:"",authDomain:"",projectId:"",appId:""};
+// รหัสผ่านสำหรับเพิ่ม/แก้ไข/ลบงาน (เว้นว่าง = ไม่ใช้รหัสผ่าน)
+const EDIT_PASS="7412";
+let unlockedUntil=0,pend=null;
+function need(fn){
+ if(!EDIT_PASS||Date.now()<unlockedUntil)return fn();
+ pend=fn;$('pwi').value='';$('pwe').textContent='';$('pw').showModal();$('pwi').focus();
+}
+$('pwc').onclick=()=>$('pw').close();
+$('pwo').onclick=()=>{
+ if($('pwi').value!==EDIT_PASS){$('pwe').textContent='รหัสผ่านไม่ถูกต้อง';$('pwi').select();return}
+ unlockedUntil=Date.now()+10*60*1000;$('pw').close();const f=pend;pend=null;f&&f();
+};
+$('pwi').onkeydown=e=>{if(e.key==='Enter')$('pwo').click()};
+let db=null,cloud=false;
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+const KEY='sched_v1';
+let S={ev:[],cats:['งานหอประชุม','งานหลวง','งานนอก'],v2:1};
+try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}
+if(!S.v2){S.cats=['งานหอประชุม','งานหลวง','งานนอก'];S.ev.forEach(e=>e.type=0);S.v2=1}
+let cur=0;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const now=new Date();let ym=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+const MN=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MS=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const col=t=>{const h=(S.cats.indexOf(t)+1)*67%360;return `background:hsl(${h} 60% 50%/.18);color:hsl(${h} 55% 38%)`};
+let edit=null,sel=null;
+
+const IC=['🏛️','👑','🚐'];
+function fillCats(){
+ $('type').innerHTML=S.cats.map((c,i)=>`<option value="${i}">${esc(c)}</option>`).join('');
+ $('tabs').innerHTML=S.cats.map((c,i)=>{const n=S.ev.filter(e=>e.date.startsWith(ym)&&+e.type===i).length;return `<div class="tab${i===cur?' on':''}" onclick="pick(${i})"><span class="rn" title="เปลี่ยนชื่อหัวข้อ" onclick="ren(event,${i})">✏️</span><div class="ic">${IC[i]||'📁'}</div><b>${esc(c)}</b><small>${n} งาน</small></div>`}).join('');
+}
+function pick(i){cur=i;render()}
+function pd(d){sel=sel===d?null:d;render()}
+function renderCal(){
+ const [y,m]=ym.split('-').map(Number),first=new Date(y,m-1,1).getDay(),n=new Date(y,m,0).getDate();
+ const td=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+ const by={};S.ev.filter(e=>e.date.startsWith(ym)).sort((a,b)=>(a.time||'').localeCompare(b.time||'')).forEach(e=>(by[e.date]=by[e.date]||[]).push(e));
+ let h=['อา','จ','อ','พ','พฤ','ศ','ส'].map(d=>`<div class="ch">${d}</div>`).join('');
+ for(let i=0;i<first;i++)h+='<div class="cd o"></div>';
+ for(let d=1;d<=n;d++){
+  const k=ym+'-'+String(d).padStart(2,'0'),L=by[k]||[];
+  const chips=L.slice(0,3).map(e=>`<span class="ev" style="${col(S.cats[+e.type])}" title="${esc(e.name)}">${esc(e.name)}</span>`).join('');
+  h+=`<div class="cd${k===td?' td':''}${k===sel?' sl':''}" onclick="pd('${k}')"><span class="dn">${d}</span>${chips}${L.length>3?`<span class="mo">+${L.length-3}</span>`:''}</div>`;
+ }
+ $('cal').innerHTML=h;
+}
+let rIdx=0,dId=null;
+function ren(ev,i){ev.stopPropagation();need(()=>{rIdx=i;$('rv').value=S.cats[i];$('rd').showModal();$('rv').focus()})}
+$('rcx').onclick=()=>$('rd').close();
+$('rok').onclick=()=>{const n=$('rv').value.trim();if(n){S.cats[rIdx]=n;save();render();if(cloud)db.doc('meta/cats').set({list:S.cats}).catch(cerr)}$('rd').close()};
+$('rv').onkeydown=e=>{if(e.key==='Enter')$('rok').click()};
+function render(){
+ const [y,m]=ym.split('-');$('ml').textContent=MN[+m-1]+' '+(+y+543);
+ fillCats();renderCal();const t=String(cur),q=$('q').value.trim().toLowerCase();
+ const fl=$('fl');fl.hidden=!sel;
+ if(sel){fl.innerHTML='แสดงเฉพาะวันที่ '+(+sel.slice(8))+' '+MN[+m-1]+' <button id="clr">ดูทั้งเดือน</button>';$('clr').onclick=()=>pd(sel)}
+ const L=S.ev.filter(e=>e.date.startsWith(ym)&&(!sel||e.date===sel)&&String(e.type)===t&&(!q||JSON.stringify(e).toLowerCase().includes(q)))
+  .sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ $('s1').textContent=L.length;$('s2').textContent=L.reduce((a,e)=>a+(+e.guests||0),0);
+ if(!L.length){$('tw').innerHTML='<div class="empty">ยังไม่มีงานในช่วงนี้ กด “+ เพิ่มงาน”</div>';return}
+ $('tw').innerHTML='<table><thead><tr><th>ลำดับ</th><th>ชื่องาน</th><th>วันที่/เวลา</th><th>สถานที่</th><th>รายละเอียดงาน</th><th>รายการอาหาร</th><th>แขก</th><th>หัวหน้าชุด</th><th></th></tr></thead><tbody>'+
+ L.map((e,i)=>{const d=+e.date.slice(8);return `<tr><td class="n" data-l="ลำดับ">${i+1}</td><td><b>${esc(e.name)}</b></td><td data-l="วันที่">${d} ${MS[+m-1]} ${+y+543}<br>${esc(e.time)}</td><td data-l="สถานที่">${esc(e.place)}</td><td class="x" data-l="รายละเอียด">${esc(e.detail)}</td><td class="x" data-l="อาหาร">${esc(e.menu)}</td><td data-l="แขก">${esc(e.guests)}</td><td data-l="หัวหน้าชุด">${esc(e.leader)}</td><td class="act"><button class="g" onclick="need(()=>op('${e.id}'))">✏️</button><button class="g" onclick="need(()=>del('${e.id}'))">🗑️</button></td></tr>`}).join('')+'</tbody></table>';
+}
+const F=['name','date','time','place','detail','menu','guests','leader','type'];
+function op(id){
+ edit=id;const e=S.ev.find(x=>x.id===id)||{date:sel||ym+'-'+String(now.getDate()).padStart(2,'0'),type:cur};
+ if(!id&&!e.date.startsWith(ym))e.date=ym+'-01';
+ F.forEach(k=>$(k).value=e[k]??'');$('dt').textContent=id?'แก้ไขงาน':'เพิ่มงาน';$('dl').showModal();
+}
+function del(id){const e=S.ev.find(x=>x.id===id);if(!e)return;dId=id;$('dm').textContent='ลบงาน “'+e.name+'” ใช่หรือไม่?';$('dd').showModal()}
+$('dcx').onclick=()=>$('dd').close();
+$('dok').onclick=()=>{if(cloud)delEv(dId);else S.ev=S.ev.filter(e=>e.id!==dId);save();$('dd').close();render()};
+$('add').onclick=()=>need(()=>op(null));
+$('cx').onclick=()=>$('dl').close();
+$('sv').onclick=()=>{
+ if(!$('name').value.trim()||!$('date').value){$('dt').textContent='⚠️ กรุณากรอกชื่องานและวันที่';return}
+ const o={};F.forEach(k=>o[k]=$(k).value.trim());o.type=+o.type;cur=o.type;
+ const id=edit||uid();
+ if(cloud)putEv({id,...o});else if(edit)Object.assign(S.ev.find(x=>x.id===edit),o);else S.ev.push({id,...o});
+ ym=o.date.slice(0,7);if(sel&&!sel.startsWith(ym))sel=null;save();$('dl').close();render();
+};
+const shift=n=>{let [y,m]=ym.split('-').map(Number);m+=n;if(m<1){m=12;y--}if(m>12){m=1;y++}ym=y+'-'+String(m).padStart(2,'0');sel=null;render()};
+$('pv').onclick=()=>shift(-1);$('nx').onclick=()=>shift(1);
+$('q').oninput=render;
+fillCats();render();
+const HD=['วันที่','เวลา','ชื่องาน','สถานที่','รายละเอียดงาน','รายการอาหาร','จำนวนแขก','หัวหน้าชุด','ประเภท'];
+const q2=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+function toCSV(){
+ const rows=[HD].concat(S.ev.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(e=>[e.date,e.time,e.name,e.place,e.detail,e.menu,e.guests,e.leader,S.cats[+e.type]||S.cats[0]]));
+ return '\ufeff'+rows.map(r=>r.map(q2).join(',')).join('\r\n');
+}
+function parseCSV(t){
+ t=t.replace(/^\ufeff/,'');const R=[];let r=[],f='',q=false;
+ for(let i=0;i<t.length;i++){const c=t[i];
+  if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c==='"')q=true;
+  else if(c===','){r.push(f);f=''}
+  else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;r.push(f);f='';R.push(r);r=[]}
+  else f+=c}
+ if(f!==''||r.length){r.push(f);R.push(r)}
+ return R.filter(x=>x.some(v=>v.trim()!==''));
+}
+function normDate(v){
+ if(typeof v==='number'&&v>20000){const d=new Date(Math.round((v-25569)*864e5));return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')+'-'+String(d.getUTCDate()).padStart(2,'0')}
+ v=String(v).trim();let m;
+ if(m=v.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/)){let y=+m[1];if(y>2400)y-=543;return y+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0')}
+ if(m=v.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/)){let y=+m[3];if(y>2400)y-=543;return y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0')}
+ return '';
+}
+const fromCSV=t=>fromRows(parseCSV(t));
+function fromRows(R){
+ if(!R||R.length<2)return null;
+ const h=R[0].map(x=>String(x).trim()),ix=k=>h.indexOf(k);
+ if(ix('วันที่')<0||ix('ชื่องาน')<0)return null;
+ const cats=S.cats.slice(),ev=[];let n=0;
+ R.slice(1).forEach(r=>{
+  const raw=k=>ix(k)<0?'':(r[ix(k)]??''),g=k=>String(raw(k)).trim(),date=normDate(raw('วันที่')),name=g('ชื่องาน');
+  if(!date||!name)return;
+  let ty=cats.indexOf(g('ประเภท'));if(ty<0){const c=g('ประเภท');if(c){cats.push(c);ty=cats.length-1}else ty=0}
+  ev.push({id:Date.now().toString(36)+(n++).toString(36),name,date,time:g('เวลา'),place:g('สถานที่'),detail:g('รายละเอียดงาน'),menu:g('รายการอาหาร'),guests:g('จำนวนแขก'),leader:g('หัวหน้าชุด'),type:ty});
+ });
+ return {ev,cats,v2:1};
+}
+const evRows=()=>S.ev.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(e=>[e.date,e.time,e.name,e.place,e.detail,e.menu,e.guests!==''&&!isNaN(e.guests)?+e.guests:e.guests,e.leader,S.cats[+e.type]||S.cats[0]]);
+function mkFile(){
+ const day=new Date().toISOString().slice(0,10);
+ if(typeof XLSX!=='undefined'){
+  const ws=XLSX.utils.aoa_to_sheet([HD].concat(evRows()));
+  ws['!cols']=[12,14,28,22,40,40,10,16,16].map(w=>({wch:w}));
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'ตารางงาน');
+  return new File([XLSX.write(wb,{bookType:'xlsx',type:'array'})],'ตารางงาน-'+day+'.xlsx',{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ }
+ return new File([toCSV()],'ตารางงาน-'+day+'.csv',{type:'text/csv'});
+}
+$('bk').onclick=async()=>{
+ try{
+  const file=mkFile();
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:'สำรองตารางงาน'});return}catch(x){if(x&&x.name==='AbortError')return}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.appendChild(a);a.click();a.remove();
+ }catch(e){alert('สำรองข้อมูลไม่สำเร็จ')}
+};
+$('rs').onclick=()=>need(()=>$('rf').click());
+$('rf').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+ const bad=()=>alert('อ่านไฟล์ไม่ได้ ต้องเป็นไฟล์ที่สำรองจากแอปนี้');
+ const fin=d=>{
+  if(!d)return bad();
+  if(!confirm('กู้คืนจะแทนที่ข้อมูลปัจจุบันทั้งหมด ('+d.ev.length+' งาน) ดำเนินการต่อหรือไม่?'))return;
+  cur=0;sel=null;if(cloud)replaceAll(d).catch(cerr);else{S=d;save();render()}
+ };
+ const r=new FileReader();
+ if(/\.xlsx?$/i.test(f.name)){
+  if(typeof XLSX==='undefined')return alert('ต้องออนไลน์ก่อนจึงจะอ่านไฟล์ Excel ได้ ลองใช้ไฟล์ .csv แทน');
+  r.onload=()=>{try{const wb=XLSX.read(r.result,{type:'array'});fin(fromRows(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''})))}catch(x){bad()}};
+  r.readAsArrayBuffer(f);
+ }else{
+  r.onload=()=>{try{
+   if(/\.json$/i.test(f.name)){const j=JSON.parse(r.result);fin(Array.isArray(j.ev)&&Array.isArray(j.cats)?{...j,v2:1}:null)}
+   else fin(fromCSV(r.result));
+  }catch(x){bad()}};
+  r.readAsText(f);
+ }
+};
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+// ===== ซิงก์ออนไลน์ (Firebase) =====
+const cerr=e=>alert(e&&e.code==='permission-denied'?'บัญชีนี้ไม่มีสิทธิ์แก้ไขข้อมูล':'บันทึกออนไลน์ไม่สำเร็จ ลองใหม่อีกครั้ง');
+const putEv=e=>{const {id,...r}=e;db.collection('events').doc(id).set(r).catch(cerr)};
+const delEv=id=>db.collection('events').doc(id).delete().catch(cerr);
+async function replaceAll(d){
+ const ops=[],C=db.collection('events');
+ S.ev.forEach(e=>ops.push(b=>b.delete(C.doc(e.id))));
+ d.ev.forEach(e=>{const {id,...r}=e;ops.push(b=>b.set(C.doc(id||uid()),r))});
+ ops.push(b=>b.set(db.doc('meta/cats'),{list:d.cats}));
+ for(let i=0;i<ops.length;i+=400){const b=db.batch();ops.slice(i,i+400).forEach(f=>f(b));await b.commit()}
+}
+let uE=null,uC=null,firstSnap=true;
+function listen(){
+ uE&&uE();uC&&uC();firstSnap=true;
+ uC=db.doc('meta/cats').onSnapshot(d=>{if(d.exists&&Array.isArray(d.data().list)){S.cats=d.data().list;save();render()}},()=>{});
+ uE=db.collection('events').onSnapshot({includeMetadataChanges:true},snap=>{
+  if(firstSnap&&!snap.metadata.fromCache){
+   firstSnap=false;
+   if(snap.empty&&S.ev.length&&confirm('ระบบออนไลน์ยังไม่มีข้อมูล\nอัปโหลดข้อมูลในเครื่อง ('+S.ev.length+' งาน) ขึ้นไปหรือไม่?\n(ถ้ากดยกเลิก ข้อมูลในเครื่องจะถูกแทนที่ด้วยข้อมูลออนไลน์ที่ว่างเปล่า)')){
+    replaceAll({ev:S.ev.slice(),cats:S.cats.slice()}).catch(cerr);return;
+   }
+  }
+  S.ev=snap.docs.map(d=>({...d.data(),id:d.id}));save();render();
+  $('st').textContent=snap.metadata.hasPendingWrites?'⏳ รอซิงก์':snap.metadata.fromCache?'📴 ออฟไลน์':'☁️ ซิงก์แล้ว';
+ },()=>{$('st').textContent='⚠️ เชื่อมต่อไม่ได้'});
+}
+function initCloud(){
+ if(!FB.apiKey||typeof firebase==='undefined')return;
+ firebase.initializeApp(FB);
+ const auth=firebase.auth();db=firebase.firestore();
+ db.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+ cloud=true;$('lo').hidden=false;
+ $('lg').oncancel=e=>e.preventDefault();
+ const go=()=>{$('lerr').textContent='';auth.signInWithEmailAndPassword($('le').value.trim(),$('lp').value).catch(()=>{$('lerr').textContent='อีเมลหรือรหัสผ่านไม่ถูกต้อง'})};
+ $('lok').onclick=go;$('lp').onkeydown=e=>{if(e.key==='Enter')go()};
+ $('lo').onclick=()=>auth.signOut();
+ auth.onAuthStateChanged(u=>{
+  if(!u){uE&&uE();uC&&uC();uE=uC=null;$('st').textContent='';if(!$('lg').open)$('lg').showModal();return}
+  if($('lg').open)$('lg').close();$('lp').value='';listen();
+ });
+}
+initCloud();
+</script>
+</body>
+</html>
